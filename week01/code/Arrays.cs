@@ -13,7 +13,20 @@ public static class Arrays
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
 
-        return []; // replace this return statement with your own
+        //Plan
+        //1. Create a new array using doubles with the size specified by 'length'.
+        //2. loop from 1 to 'length' to generate each multiple.
+        //3. calculate the multiple inside teh loop (number * current loop index)
+        //4. store the multiple in the array at the correct position (index-1)
+        //5. return the array with the new value
+
+        var result = new double[length];
+        for (int i = 1; i <= length; ++i)
+        {
+            result[i - 1] = number * i;
+        }
+
+        return result; // replace this return statement with your own
     }
 
     /// <summary>
@@ -29,5 +42,20 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        //PLAN
+        //1. find the starting point of the section that needs to be moved. This will be 'data.count - amount'
+        //2. get the sub-list of elements fromt eh starting point to the end of list
+        //3. remove the same sublist of elements from the original list
+        //4 insert the sublist that was saved at the beginning
+
+        var splitIndex = data.Count - amount;
+
+        //get items to be moved to the front
+        List<int> itemsToMove = data.GetRange(splitIndex, amount);
+        //remove tems from end
+        data.RemoveRange(splitIndex, amount);
+        //add back to the beggining
+        data.InsertRange(0, itemsToMove);
     }
 }
