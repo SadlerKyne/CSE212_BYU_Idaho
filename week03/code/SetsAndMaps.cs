@@ -22,27 +22,23 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         var results = new List<string>();
-        var seen = new HashSet<string>();
+        var seen = new bool[256, 256];
 
         foreach (var word in words)
         {
-            //reverse the current word
-            char[] charArray = word.ToCharArray();
-            Array.Reverse(charArray);
-            string reversedWord = new string(charArray);
-
-            //check if the reversed word is in the set
-            if (seen.Contains(reversedWord))
+            int c1 = word[0];
+            int c2 = word[1];
+            
+            if (seen[c2, c1]) 
             {
-                results.Add($"{word} & {reversedWord}");
+                results.Add($"{word} & {word[1]}{word[0]}");
             }
             else
             {
-                seen.Add(word);
+                seen[c1, c2] = true;
             }
-        }
-        return results.ToArray();
-    }
+            } return results.ToArray();
+        } 
 
     /// <summary>
     /// Read a census file and summarize the degrees (education)
@@ -96,34 +92,27 @@ public static class SetsAndMaps
     /// </summary>
     public static bool IsAnagram(string word1, string word2)
     {
-        string clean1 = word1.Replace(" ", "").ToLower();
-        string clean2 = word2.Replace(" ", "").ToLower();
-        if (clean1.Length != clean2.Length)
+        var counts = new int[256];
+        int length1 = 0;
+        int length2 = 0;
+
+        foreach (char c in word1)
         {
-            return false;
+            if (c == ' ') continue;
+            counts[char.ToLower(c)]++;
+            length1++;
         }
-        var charCounts = new Dictionary<char, int>();
-        foreach (char c in clean1)
-        {
-            if (charCounts.ContainsKey(c))
-            {
-                charCounts[c]++;
+        foreach (char c in word2)
+        {            if (c == ' ') continue;
+            char lower = char.ToLower(c);
+
+            if (counts[lower] == 0) { return false;
             }
-            else
-            {
-                charCounts[c] = 1;
-            }
+            counts[lower]--;
+            length2++;
         }
-        foreach (char c in clean2)
-        {
-            if (!charCounts.ContainsKey(c) || charCounts[c] == 0)
-            {
-                return false;
-            }
-            charCounts[c]--;
-            
-        } return true;
-    }      
+            return length1 == length2;
+        }     
 
     /// <summary>
     /// This function will read JSON (Javascript Object Notation) data from the 
